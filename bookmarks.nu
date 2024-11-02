@@ -4,6 +4,10 @@
 $env.nu_bookmarks_path =  ([($env.nu_bookmarks_dir? | default $nu.home-path), ".bookmarks"] | path join)
 $env._nu_bookmarks_registry = {}
 
+def bookmark_name_completions [] {
+    $env._nu_bookmarks_registry | transpose name path | get name
+}
+
 # List available bookmarks
 def "bookmark list" [] {
     if ($env._nu_bookmarks_registry | values | length) == 0 {
@@ -68,7 +72,7 @@ def --env "bookmark make" [name: string, path?: string] {
 }
 
 # Remove a bookmark
-def --env "bookmark remove" [...names: string] {
+def --env "bookmark remove" [...names: string@bookmark_name_completions] {
     for $name in $names {
         if ($env._nu_bookmarks_registry | get $name --ignore-errors) == null {
             print $"(ansi light_yellow)\(Bookmarks) (ansi light_red)Bookmark (ansi light_magenta)($name) (ansi light_red)not found.(ansi reset)"
@@ -82,7 +86,7 @@ def --env "bookmark remove" [...names: string] {
 }
 
 # Jump to a bookmark
-def --env "bookmark go" [name: string] {
+def --env "bookmark go" [name: string@bookmark_name_completions] {
     let target_directory = $env._nu_bookmarks_registry | get $name --ignore-errors
 
     if $target_directory == null {
@@ -95,7 +99,7 @@ def --env "bookmark go" [name: string] {
     null
 }
 
-def "bookmark get" [name: string] {
+def "bookmark get" [name: string@bookmark_name_completions] {
     let target_directory = ($env._nu_bookmarks_registry | get $name --ignore-errors)
 
     if $target_directory == null {
