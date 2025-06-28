@@ -66,6 +66,10 @@ The following commands are available:
 | `bookmark save [location]`          | Save bookmarks to file.              |
 | `bookmark load [location]`          | Load bookmarks from file.            |
 
+Completions for bookmarks are available and all commands have a description, as
+well as their arguments and flags, so usage should be fairly straightforward
+due to Nushell's incredible completion features.
+
 ## Usage
 
 Commands that create, delete or modify existing bookmarks operate on a local,
