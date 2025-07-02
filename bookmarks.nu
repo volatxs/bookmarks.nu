@@ -15,7 +15,8 @@
  # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Configuration options:
-# - $env.nu_bookmarks_dir: where the bookmarks file is stored, defaults to $nu.home-path
+# - $env.nu_bookmarks_dir: where the bookmarks file is stored, defaults to
+#   $nu.home-path
 
 $env.nu_bookmarks_path =  ([($env.nu_bookmarks_dir? | default $nu.home-path), ".bookmarks"] | path join)
 $env._nu_bookmarks_registry = {}
@@ -228,5 +229,28 @@ def "bookmark find" [
         }
     }
 
+    null
+}
+
+# Change bookmark's path.
+def --env "bookmark change" [
+    name: string@_bookmark_name_completions, # Bookmark's name.
+    new_path: string,                        # New path for bookmark.
+] {
+    if ($env._nu_bookmarks_registry | get $name --ignore-errors) == null {
+        print $"(ansi light_yellow)\(Bookmarks) (ansi light_red)Bookmark (ansi light_magenta)($name) (ansi light_red)not found.(ansi reset)"
+        return null
+    }
+
+    let target_path = $new_path | path expand
+
+    if not ($target_path | path exists) {
+        print $"(ansi light_yellow)\(Bookmarks) (ansi light_red)Path (ansi light_magenta)($target_path) (ansi light_red)not found.(ansi reset)"
+        return null
+    }
+
+    $env._nu_bookmarks_registry = $env._nu_bookmarks_registry | update $name $target_path
+
+    print $"(ansi light_yellow)\(Bookmarks)(ansi reset) Bookmark path of (ansi light_magenta)($name)(ansi reset) changed to (ansi light_magenta)($target_path)(ansi reset)."
     null
 }

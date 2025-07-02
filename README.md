@@ -65,6 +65,7 @@ The following commands are available:
 | `bookmark list`                     | List bookmarks.                      |
 | `bookmark save [location]`          | Save bookmarks to file.              |
 | `bookmark load [location]`          | Load bookmarks from file.            |
+| `bookmark change <name> <new_path>` | Change bookmark's path.              |
 
 Completions for bookmarks are available and all commands have a description, as
 well as their arguments and flags, so usage should be fairly straightforward
