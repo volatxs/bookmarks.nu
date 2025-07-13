@@ -15,6 +15,9 @@
 # Configuration options:
 # - $env.nu_bookmarks_dir: where the bookmarks file is stored, defaults to $nu.home-path
 
+alias builtin-save = save
+alias builtin-get = get
+
 export-env {
     $env.nu_bookmarks_path = ([($env.nu_bookmarks_dir? | default $nu.home-path), ".bookmarks"] | path join)
     $env._nu_bookmarks_registry = {}
@@ -46,7 +49,6 @@ export def list [] {
     $env._nu_bookmarks_registry
 }
 
-alias builtin-save = save
 # Save bookmarks to file.
 export def save [
     location?: string, # Path of file to use. If absent, the default is used.
@@ -130,7 +132,6 @@ export def --env remove [
     null
 }
 
-alias builtin-get = get
 # Get path of bookmark.
 export def get [
     name: string@bookmark_names, # Bookmark name.
@@ -149,7 +150,7 @@ export def get [
 export def --env go [
     name: string@bookmark_names, # Bookmark name.
 ] {
-    let target_directory = bookmark builtin-get $name
+    let target_directory = get $name
 
     if $target_directory != null {
         cd $target_directory
